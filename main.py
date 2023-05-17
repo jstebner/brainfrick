@@ -28,8 +28,10 @@ def main():
             case ']': # end loop
                 if mem[mp] != 0:
                     ip = loop_stack.pop() - 1
+                else:
+                    loop_stack.pop()
             case ',': # input character
-                mem[ip] = ord(input()) % 256
+                mem[ip] = ord(input()[0]) % 256
             case '.': # output character
                 print(chr(mem[mp]), end='')
         
