@@ -1,3 +1,16 @@
+def find_end(idx, instr):
+    count = 1
+    while idx < len(instr)-1:
+        if instr[idx+1] == '[':
+            count += 1
+        if instr[idx+1] == ']':
+            count -= 1
+            
+        if count == 0:
+            return idx+2
+        
+        idx += 1
+
 def parse_instr(instr, MEM_SIZE, mem, mp, ip, loop_stack):
     match instr[ip]:
         case '>': # inc mp
@@ -11,30 +24,23 @@ def parse_instr(instr, MEM_SIZE, mem, mp, ip, loop_stack):
             
         case '-': # dec curr mem
             mem[mp] = (mem[mp] - 1) % 256
-            
+        # FIXME: this does not work
         case '[': # start loop
-            # FIXME: currently, all this does is mark start of loop, 
-            #        so its basically a 'do{...}while(mem[mp]!=0);'
-            #        instead of 'while(mem[mp]!=0){...}'
-            #        which is not pog !
-            loop_stack.append(ip)
-            
             if mem[mp] == 0:
-                # do something
-                pass
+                ip = find_end(ip, instr)
             else:
-                # do something else ?
-                pass
-            
+                loop_stack.append(ip)
+        # FIXME: neither does this
         case ']': # end loop
-            # FIXME: rmv 0 check here since its handled by start bracket ig
-            ip = (lambda loop_idx: ip if mem[mp] == 0 else loop_idx - 1)(loop_stack.pop())
+            ip = loop_stack.pop() - 1
             
         case ',': # input character
             mem[ip] = ord(input()[0]) % 256
             
         case '.': # output character
-            print(chr(mem[mp]), end='')
+            # DEBUG:
+            # print(chr(mem[mp]), end='')
+            print(mem[mp], sep='')
             
     ip += 1
     return mem, mp, ip, loop_stack
@@ -47,7 +53,8 @@ def main():
     instr = list(
         filter(
             lambda x: x in '><+-[],.', 
-            open('./data/helloworld.bf', 'r').read()
+            # open('./data/helloworld.bf', 'r').read()
+            open('./data/0123.bf', 'r').read()
             )
         )
     ip = 0
@@ -56,6 +63,11 @@ def main():
     
     while ip < len(instr):
         mem, mp, ip, loop_stack = parse_instr(instr, MEM_SIZE, mem, mp, ip, loop_stack)
+        # DEBUG:
+        print(instr[ip])
+        print(' | '.join(map(lambda x: str(x).rjust(2),mem[:8])))
+        # time.sleep(0.5)
 
 if __name__ == '__main__':
+    import time
     main()
