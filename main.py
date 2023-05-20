@@ -44,17 +44,14 @@ def parse_instr(instr, MEM_SIZE, mem, mp, ip, loop_stack):
     return mem, mp, ip, loop_stack
 
 def main():
-    MEM_SIZE = 30_000
+    MEM_SIZE = 32
     mem = [0] * MEM_SIZE
     mp = 0
     
     instr = list(
         filter(
             lambda x: x in '><+-[],.', 
-            # open('./data/helloworld.bf', 'r').read()
-            # open('./data/0123.bf', 'r').read()
-            open('./data/password.bf', 'r').read()
-            # open('./data/cat.bf', 'r').read()
+            open(f'./data/{sys.argv[1]}.bf', 'r').read()
             )
         )
     ip = 0
@@ -62,7 +59,9 @@ def main():
     loop_stack = list()
     
     while ip < len(instr):
+        # print(' | '.join(map(lambda x: str(x).rjust(3), mem[:8])), ' '*6*mp+'  ^', f'{instr[ip]} ({ip})', sep='\n')
         mem, mp, ip, loop_stack = parse_instr(instr, MEM_SIZE, mem, mp, ip, loop_stack)
 
 if __name__ == '__main__':
+    import sys
     main()

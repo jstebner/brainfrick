@@ -1,12 +1,17 @@
 # brainfrick
 BrainF*ck interpreter, but in python, but in 1 LOC :)
 
-input scripts are stored in ./data/ as .bf files, only the recognized characters (listed in rules) are read in, everything else treated as comments (thrown out).
+input scripts are stored in ./data/ as .bf files, only the recognized characters (listed in rules) are read in, everything else treated as comments (ie thrown out).
 
-run the program (using hardcoded input filename) with
+run the 'good' bf interpreter with
 ```
-py ./main.py
+py ./main.py [filname]
 ```
+1loc script for helloworld (in bf, interpreter by py) can be run with
+```
+py ./helloworld.py
+```
+
 
 ## rules
 ```
